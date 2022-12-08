@@ -63,3 +63,53 @@
 --e.LastName, e.FirstName, p.LastName, p.FirstName
 --from Employees e
 --right join Employees p on e.EmployeeID=p.ReportsTo
+__________________
+--select avg(UnitPrice) from Products;
+
+--select ProductName, UnitPrice, (select avg(UnitPrice) from Products) as srednia from Products
+--where UnitPrice > (select avg(28.87) from Products);
+
+
+
+--select ProductName, opis from(
+
+--select ProductName, UnitPrice,
+--case 
+--when UnitPrice <= 30 then 'Tanie'
+--when UnitPrice between 31 and 60 then 'Srednie'
+--when UnitPrice between 61 and 100 then 'Drogie'
+--when UnitPrice > 100 then 'Bardzo drogie'
+--else 'inne'
+--end as opis
+--from Products) as abc
+--where opis like 'Drogie';
+
+--select * from(
+--select count(OrderID) as ile, CompanyName from Customers c
+--inner join Orders o on c.CustomerID=o.CustomerID
+--group by CompanyName) as ab
+--where ile = 5;
+
+--select ProductName from Products
+--where SupplierID in(select SupplierID from Suppliers where Country like 'USA' or Country like 'UK');
+
+--select ProductName from Products
+--where SupplierID in(select SupplierID from Suppliers where Country in('USA','UK'));
+
+--select ProductName from Products
+--where exists (select SupplierID from Suppliers where Country like 'France');
+
+
+--select ProductName from Products
+--where UnitPrice = any(select UnitPrice from [Order Details] where Quantity=100)
+
+--select ProductName from Products
+--where UnitPrice > all(select UnitPrice from [Order Details] where Quantity=100)
+
+
+select OrderID, round(sum(wart),2) as wartosc from (
+select OrderID, UnitPrice*Quantity*(1-Discount) as wart
+from [Order Details] 
+) as ab
+group by OrderID
+having sum(wart) < (select avg(UnitPrice*Quantity*(1-Discount)) from [Order Details]);
